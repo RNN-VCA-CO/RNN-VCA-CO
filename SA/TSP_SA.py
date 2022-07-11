@@ -1,9 +1,8 @@
-# imports
 import numpy as np
 import os
 
 """
-Utility functions
+Functions
 """
 def read_cities(path):
     """
@@ -47,12 +46,10 @@ class SA:
     Class for solving the travelling salesman problem (TSP) using Simulated Annealing.
     The TSP input is a set of Cartesian coordinates: points_X, points_Y. The cost function 
     is given by adding up the individual Euclidiean distances of every two consecutvie 
-    points on the tour. This implementation generates M independent solutions. Parameters
-    include number of warm-up steps, number of annealing steps, number of equilibrium steps, 
-    and initial temperature.
+    points on the tour. This implementation generates M independent solutions.
     || HOW TO USE ||
     create an SA object --> solver = SA(...)
-    solve to get TSP routes and corresponsing energies --> samples_X, samples_Y, energies = solver.solve()
+    solve to get TSP routes and the corresponsing energies --> samples_X, samples_Y, energies = solver.solve()
     """
     # seed for data reproducibility
     seed = 111
@@ -113,7 +110,7 @@ class SA:
         N - system size or the number of cities in the TSP configuration
         points_X - input x coordinates
         points_Y - input y coordinates
-        M - number of SA solutions to be generated independently
+        M - number of SA solutions to be processed independently
         n_warmup - number of warm-up steps
         n_anneal - number of annealing steps
         n_eq - number of equilibrium steps

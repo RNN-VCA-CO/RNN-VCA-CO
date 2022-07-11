@@ -40,15 +40,15 @@ def formulate_qubo(adj_matrix):
     np.fill_diagonal(qubo, -edge_count)
     return qubo
 
-def hamiltonian(samples, qubo):
+def hamiltonian(samples, Q):
     """
     hamiltonian returns the energies of an array of solutions.
     samples - array of solutions
-    qubo - QUBO matrix
+    Q - QUBO matrix
     energies - returns the energy of the samples
     """
-    xJ = np.dot(samples, qubo)
-    energies = np.einsum('ij,ij->i', xJ, samples)   # numpy einsum computation
+    xQ = np.dot(samples, Q)
+    energies = np.einsum('ij,ij->i', xQ, samples)   # numpy einsum computation
     return energies
 
 """
@@ -59,10 +59,10 @@ class SA:
     Class for solving the maximum cut problem (Max-Cut) using Simulated Annealing.
     The solver primary requires the QUBO matrix of the Max-Cut instance which is used to
     compute the energy of a solution. The implementation generates n_samples number of 
-    separate solutions.
+    independent solutions.
     || HOW TO USE ||
     create an SA object --> solver = SA(...)
-    solve to get the Max-Cut solutions and corresponsing energies --> samples, energies = solver.solve()
+    solve to get the Max-Cut solutions (in binary vectors) and the corresponsing energies --> samples, energies = solver.solve()
     """
     seed = 111
     rd.seed(seed)
@@ -72,7 +72,7 @@ class SA:
         """
         N - N - system size or the number of vertices in the max-cut graph
         qubo - qubo matrix of Max-Cut instance
-        n_samples - number of discrete, unrelated samples that are concurrently processed
+        n_samples - number of independent samples that are concurrently processed
         n_warmup - there are N metropolis moves per warmup step at temperature T=T0
         n_anneal - number of annealing steps where temperature is decreased after which the equilibrating steps follows
         n_eq - number of equilibrating steps after which there are N metropolis steps
@@ -88,7 +88,6 @@ class SA:
         self.n_warmup = n_warmup
         self.n_anneal = n_anneal
         self.n_eq = n_eq
-        # J and offset for energy calculation
         self.qubo = qubo
 
         # initialize random binary vector and its E
@@ -98,7 +97,7 @@ class SA:
     def solve(self):
         """
         Method solves max-cut instance with the simulated annealing technique.
-        samples - solutions to the max-cut problem
+        samples - binary vector solutions to the max-cut problem
         energies - corresponding energy value of the solutions
         """
         # warm up process
