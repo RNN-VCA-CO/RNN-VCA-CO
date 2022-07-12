@@ -1,5 +1,5 @@
 # RNN-VCA-CO
-This code is used to produce the results of our paper `Supplementing RNNs with annealing to Solve Optimization Problems`. We use both Vanilla and Dilated RNN to tackle the Maximum-Cut, Nurse Scheduling and Traveling Salesman Problems.
+This code is used to produce the results of our paper `Supplementing RNNs with annealing to Solve Optimization Problems`. We use both Vanilla and Dilated RNNs to solve the Maximum-Cut, Nurse Scheduling and Traveling Salesman Problems.
 
 This code was build on top of the code in this repository: https://github.com/VectorInstitute/VariationalNeuralAnnealing
 
