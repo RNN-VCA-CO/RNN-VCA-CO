@@ -5,11 +5,11 @@ This code was build on top of the code in this repository: https://github.com/Ve
 
 ## `Summary`
 
-- The data we used for our paper can be found in the directory "Data".
+- The data we used for our paper can be found in the directory `Data`.
 
-- The code we used to run Variational Classical Annealing (VCA) can be found in "VCA".
+- The code we used to run Variational Classical Annealing (VCA) can be found in folder `VCA`.
 
-- The code we used to run Simulated Annealing (SA) can be found in "SA".
+- The code we used to run Simulated Annealing (SA) can be found in directory `SA`.
 
 ## `Note`
 
