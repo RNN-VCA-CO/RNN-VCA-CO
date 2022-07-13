@@ -29,7 +29,7 @@ def read_graph(path):
 
 def formulate_qubo(adj_matrix):
     """
-    Take an adjacency matrix of a Max-Cut instance as parameter and generates the QUBO matrix of that instance.
+    Take an adjacency matrix of a Max-Cut instance as parameter and generate the QUBO matrix of that instance.
     adj_matrix - adjacency matrix of Max-Cut instance
     qubo - QUBO matrix of Max-Cut instance
     """    
@@ -42,7 +42,7 @@ def formulate_qubo(adj_matrix):
 
 def hamiltonian(samples, Q):
     """
-    hamiltonian returns the energies of an array of solutions.
+    hamiltonian returns the energies of an array of max-cut solutions.
     samples - array of solutions
     Q - QUBO matrix
     energies - returns the energy of the samples
