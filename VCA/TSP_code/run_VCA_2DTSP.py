@@ -17,8 +17,8 @@ import random
 from math import ceil
 import argparse
 
-from DilatedRNNWavefunction import DilatedRNNWavefunction
-from DilatedRNNWavefunction_WeightSharing import DilatedRNNWavefunction_WeightSharing
+from DilatedRNN import DilatedRNN
+from DilatedRNN_WeightSharing import DilatedRNN_WeightSharing
 from Helper_functions import *
 
 #### Hyperparams
@@ -80,9 +80,9 @@ for num_annealing_steps in list_Nannealing:
 
     # Intitializing the RNN-----------
     if args.WeightSharing:
-        DRNNWF = DilatedRNNWavefunction_WeightSharing(N,units=units,cell=tf.nn.rnn_cell.BasicRNNCell, activation = activation_function, seed = seed) #contains the graph with the RNNs
+        DRNN = DilatedRNN_WeightSharing(N,units=units,cell=tf.nn.rnn_cell.BasicRNNCell, activation = activation_function, seed = seed) #contains the graph with the RNNs
     else:
-        DRNNWF = DilatedRNNWavefunction(N,units=units,cell=tf.nn.rnn_cell.BasicRNNCell, activation = activation_function, seed = seed) #contains the graph with the RNNs
+        DRNN = DilatedRNN(N,units=units,cell=tf.nn.rnn_cell.BasicRNNCell, activation = activation_function, seed = seed) #contains the graph with the RNNs
 
     ########## Checkpointing
     if not os.path.exists('./Check_Points/'):
@@ -96,8 +96,8 @@ for num_annealing_steps in list_Nannealing:
     filename = backgroundpath+'/RNNwavefunction'+savename+'.ckpt'
 
     #Building the graph -------------------
-    with tf.compat.v1.variable_scope(DRNNWF.scope,reuse=tf.compat.v1.AUTO_REUSE):
-        with DRNNWF.graph.as_default():
+    with tf.compat.v1.variable_scope(DRNN.scope,reuse=tf.compat.v1.AUTO_REUSE):
+        with DRNN.graph.as_default():
 
             global_step = tf.Variable(0, trainable=False)
             learningrate_placeholder = tf.compat.v1.placeholder(dtype=tf.float64,shape=[])
@@ -109,8 +109,8 @@ for num_annealing_steps in list_Nannealing:
             #Defining Tensorflow placeholders
             Eloc=tf.compat.v1.placeholder(dtype=tf.float64,shape=[numsamples])
             sampleplaceholder_forgrad=tf.compat.v1.placeholder(dtype=tf.int32,shape=[numsamples,N])
-            log_probs_forgrad = DRNNWF.log_probability(sampleplaceholder_forgrad,inputdim=N)
-            samplesandprobs = DRNNWF.sample(numsamples=numsamples,inputdim=N)
+            log_probs_forgrad = DRNN.log_probability(sampleplaceholder_forgrad,inputdim=N)
+            samplesandprobs = DRNN.sample(numsamples=numsamples,inputdim=N)
 
             T_placeholder = tf.compat.v1.placeholder(dtype=tf.float64,shape=())
 
@@ -136,11 +136,11 @@ for num_annealing_steps in list_Nannealing:
     config = tf.compat.v1.ConfigProto()
     config.gpu_options.allow_growth = True
 
-    sess=tf.compat.v1.Session(graph=DRNNWF.graph, config=config)
+    sess=tf.compat.v1.Session(graph=DRNN.graph, config=config)
     sess.run(init)
 
     ## Cuunting the number of parameters
-    with DRNNWF.graph.as_default():
+    with DRNN.graph.as_default():
         variables_names =[v.name for v in tf.compat.v1.trainable_variables()]
         sum = 0
         values = sess.run(variables_names)
@@ -157,8 +157,8 @@ for num_annealing_steps in list_Nannealing:
     meanFreeEnergy = []
 
     #Loading previous trainings----------
-    with tf.compat.v1.variable_scope(DRNNWF.scope,reuse=tf.compat.v1.AUTO_REUSE):
-        with DRNNWF.graph.as_default():
+    with tf.compat.v1.variable_scope(DRNN.scope,reuse=tf.compat.v1.AUTO_REUSE):
+        with DRNN.graph.as_default():
 
             try:
                 print("Loading the model from checkpoint")
@@ -180,8 +180,8 @@ for num_annealing_steps in list_Nannealing:
 
 
     ## Run Variational Annealing
-    with tf.compat.v1.variable_scope(DRNNWF.scope,reuse=tf.compat.v1.AUTO_REUSE):
-        with DRNNWF.graph.as_default():
+    with tf.compat.v1.variable_scope(DRNN.scope,reuse=tf.compat.v1.AUTO_REUSE):
+        with DRNN.graph.as_default():
 
             samples = np.ones((numsamples, N), dtype=np.int32)
 
@@ -249,7 +249,7 @@ for num_annealing_steps in list_Nannealing:
             numsamples_estimation = 10**6 #Num samples to be obtained at the end
             numsamples_perstep = numsamples_estimation//Nsteps #The number of steps taken to get "numsamples_estimation" samples (to avoid memory allocation issues)
 
-            samplesandprobs_final = DRNNWF.sample(numsamples=numsamples_perstep,inputdim=N)
+            samplesandprobs_final = DRNN.sample(numsamples=numsamples_perstep,inputdim=N)
             energies = np.zeros((numsamples_estimation))
             solutions = np.zeros((numsamples_estimation, N), dtype = np.int32)
             log_probs_final = np.zeros((numsamples_estimation))
