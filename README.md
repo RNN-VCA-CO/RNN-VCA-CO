@@ -17,5 +17,5 @@ This code was build on top of the code in this repository: https://github.com/Ve
 - The .py files in directory 'TSP_code' use tensorflow v1 with an older numpy version (v1.16) for compatibility.
 
 ## `License`
-This code is under the ['Attribution-NonCommercial-ShareAlike 4.0 International'](https://creativecommons.org/licenses/by-nc-sa/4.0/) license.
- 
+This code can be freely used for academic purposes that are socially and scientifically beneficial. However, it is under the ['Attribution-NonCommercial-ShareAlike 4.0 International'](https://creativecommons.org/licenses/by-nc-sa/4.0/) license. 
+
