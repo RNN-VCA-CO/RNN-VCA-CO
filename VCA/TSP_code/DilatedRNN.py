@@ -4,15 +4,15 @@ import random
 
 """
 This implementation is an adaptation of RNN Wave Functions' code https://github.com/mhibatallah/RNNWavefunctions
-Here, we define the Dilated RNNwavefunction class, which contains the sample method
+Here, we define the Dilated RNN class, which contains the sample method
 that allows to sample configurations autoregressively from the RNN and
 the log_probability method which allows to estimate the log-probability of a set of configurations.
 We also note that the dilated connections between RNN cells allow to take care of the long-distance
 dependencies between spins more efficiently as explained in https://arxiv.org/abs/2101.10154.
 """
 
-class DilatedRNNWavefunction(object):
-    def __init__(self,systemsize,cell=tf.nn.rnn_cell.BasicRNNCell,activation=tf.nn.relu,units=[2],scope='DilatedRNNwavefunction', seed = 111):
+class DilatedRNN(object):
+    def __init__(self,systemsize,cell=tf.nn.rnn_cell.BasicRNNCell,activation=tf.nn.relu,units=[2],scope='DilatedRNN', seed = 111):
         """
             systemsize:  int
                          number of sites
