@@ -13,7 +13,7 @@ This code was build on top of the code in this repository: https://github.com/Ve
 
 ## `Note`
 
-- The .py files in the VCA directory are use tensorflow v2 along with latest numpy version.
+- The .py files in the VCA directory use tensorflow v2 along with latest numpy version.
 
 ## `License`
 This code can be freely used for academic purposes that are socially and scientifically beneficial. However, it is under the ['Attribution-NonCommercial-ShareAlike 4.0 International'](https://creativecommons.org/licenses/by-nc-sa/4.0/) license. 
