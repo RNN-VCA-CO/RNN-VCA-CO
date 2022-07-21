@@ -48,7 +48,7 @@ filepath = "D:\SJ Thesis\RNN-VCA-CO-main\VCA\VCA Max-Cut\Max-Cut Instances\\rudy
 assert(os.path.exists(filepath)) # check if file exists in path
 graph, N = read_graph(filepath)
 qubo = formulate_qubo(graph)
-# VCA parameters
+# VCA hyperparameters
 # n_warmup - number of training steps at the initial temperature T=T0
 # n_anneal - duration of the annealing procedure
 # n_train - number of training step during backprop after every annealing step

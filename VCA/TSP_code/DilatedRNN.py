@@ -12,7 +12,7 @@ dependencies between spins more efficiently as explained in https://arxiv.org/ab
 """
 
 class DilatedRNN(object):
-    def __init__(self,systemsize,cell=tf.nn.rnn_cell.BasicRNNCell,activation=tf.nn.relu,units=[2],scope='DilatedRNN', seed = 111):
+    def __init__(self,systemsize,cell=tf.compat.v1.nn.rnn_cell.BasicRNNCell,activation=tf.nn.relu,units=[2],scope='DilatedRNN', seed = 111):
         """
             systemsize:  int
                          number of sites
@@ -34,12 +34,12 @@ class DilatedRNN(object):
 
         #Defining the neural network
         with self.graph.as_default():
-            with tf.variable_scope(self.scope,reuse=tf.AUTO_REUSE):
-                tf.set_random_seed(seed)  # tensorflow pseudo-random generator
+            with tf.compat.v1.variable_scope(self.scope,reuse=tf.compat.v1.AUTO_REUSE):
+                tf.compat.v1.set_random_seed(seed)  # tensorflow pseudo-random generator
 
                 #Define the RNN cell where units[n] corresponds to the number of memory units in each layer n
                 self.rnn=[[cell(num_units = units[i], activation = activation,name="rnn_"+str(n)+str(i),dtype=tf.float64) for n in range(self.N)] for i in range(self.numlayers)]
-                self.dense = [tf.layers.Dense(self.N,activation=tf.nn.softmax,name='wf_dense'+str(n)) for n in range(self.N)] #Define the Fully-Connected layer followed by a Softmax
+                self.dense = [tf.compat.v1.layers.Dense(self.N,activation=tf.nn.softmax,name='wf_dense'+str(n)) for n in range(self.N)] #Define the Fully-Connected layer followed by a Softmax
 
     def projection(self,output,cities_queue):
         projected_output = cities_queue*output
@@ -65,7 +65,7 @@ class DilatedRNN(object):
             samples_onehot = []
             probs = []
 
-            with tf.variable_scope(self.scope,reuse=tf.AUTO_REUSE):
+            with tf.compat.v1.variable_scope(self.scope,reuse=tf.compat.v1.AUTO_REUSE):
 
                 inputs=tf.zeros((numsamples,inputdim), dtype = tf.float64) #Feed the table b in tf.
                 cities_queue = tf.ones((numsamples,self.inputdim), dtype = tf.float64)
@@ -96,7 +96,7 @@ class DilatedRNN(object):
                     output=self.dense[n](rnn_output)
                     output = self.projection(output, cities_queue) #Projection of probability to construct a valid tour at the end
                     probs.append(output)
-                    sample_temp=tf.reshape(tf.multinomial(tf.log(output),num_samples=1),[-1,]) #Sample from the probability
+                    sample_temp=tf.reshape(tf.compat.v1.multinomial(tf.math.log(output),num_samples=1),[-1,]) #Sample from the probability
                     samples.append(sample_temp)
                     inputs=tf.one_hot(sample_temp,depth=self.outputdim,dtype = tf.float64)
                     cities_queue = cities_queue - inputs
@@ -104,7 +104,7 @@ class DilatedRNN(object):
         probs=tf.transpose(tf.stack(values=probs,axis=2),perm=[0,2,1])
         self.samples=tf.stack(values=samples,axis=1) # (self.N, num_samples) to (num_samples, self.N): Generate self.numsamples vectors of size self.N spin containing 0 or 1
         one_hot_samples=tf.one_hot(self.samples,depth=self.inputdim, dtype = tf.float64)
-        self.log_probs=tf.reduce_sum(tf.log(tf.reduce_sum(tf.multiply(probs,one_hot_samples),axis=2)),axis=1)
+        self.log_probs=tf.reduce_sum(tf.math.log(tf.reduce_sum(tf.multiply(probs,one_hot_samples),axis=2)),axis=1)
 
         return self.samples,self.log_probs
 
@@ -133,7 +133,7 @@ class DilatedRNN(object):
             inputs=tf.zeros((self.numsamples, self.inputdim), dtype=tf.float64)
             cities_queue = tf.ones((self.numsamples,self.inputdim), dtype = tf.float64)
 
-            with tf.variable_scope(self.scope,reuse=tf.AUTO_REUSE):
+            with tf.compat.v1.variable_scope(self.scope,reuse=tf.compat.v1.AUTO_REUSE):
                 probs=[]
 
                 rnn_states = []
@@ -162,6 +162,6 @@ class DilatedRNN(object):
             probs=tf.cast(tf.transpose(tf.stack(values=probs,axis=2),perm=[0,2,1]),tf.float64)
             one_hot_samples=tf.one_hot(samples,depth=self.inputdim, dtype = tf.float64)
 
-            self.log_probs=tf.reduce_sum(tf.log(tf.reduce_sum(tf.multiply(probs,one_hot_samples),axis=2)),axis=1)
+            self.log_probs=tf.reduce_sum(tf.math.log(tf.reduce_sum(tf.multiply(probs,one_hot_samples),axis=2)),axis=1)
 
             return self.log_probs

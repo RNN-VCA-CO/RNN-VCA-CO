@@ -29,7 +29,7 @@ parser.add_argument('--seed', type = int, default=111)
 parser.add_argument('--lr', type = float, default=1e-3)
 parser.add_argument('--numsamples', type = int, default=50)
 parser.add_argument('--numunits', type = int, default=20)
-parser.add_argument('--Nwarmup', type = int, default=2000)
+parser.add_argument('--Nwarmup', type = int, default=5)
 parser.add_argument('--WeightSharing', type = str2bool, default="True")
 
 args = parser.parse_args()
@@ -80,9 +80,9 @@ for num_annealing_steps in list_Nannealing:
 
     # Intitializing the RNN-----------
     if args.WeightSharing:
-        DRNN = DilatedRNN_WeightSharing(N,units=units,cell=tf.nn.rnn_cell.BasicRNNCell, activation = activation_function, seed = seed) #contains the graph with the RNNs
+        DRNN = DilatedRNN_WeightSharing(N,units=units,cell=tf.compat.v1.nn.rnn_cell.BasicRNNCell, activation = activation_function, seed = seed) #contains the graph with the RNNs
     else:
-        DRNN = DilatedRNN(N,units=units,cell=tf.nn.rnn_cell.BasicRNNCell, activation = activation_function, seed = seed) #contains the graph with the RNNs
+        DRNN = DilatedRNN(N,units=units,cell=tf.compat.v1.nn.rnn_cell.BasicRNNCell, activation = activation_function, seed = seed) #contains the graph with the RNNs
 
     ########## Checkpointing
     if not os.path.exists('./Check_Points/'):
@@ -139,16 +139,16 @@ for num_annealing_steps in list_Nannealing:
     sess=tf.compat.v1.Session(graph=DRNN.graph, config=config)
     sess.run(init)
 
-    ## Cuunting the number of parameters
-    with DRNN.graph.as_default():
-        variables_names =[v.name for v in tf.compat.v1.trainable_variables()]
-        sum = 0
-        values = sess.run(variables_names)
-        for k,v in zip(variables_names, values):
-            v1 = tf.reshape(v,[-1])
-            print(k,v1.shape)
-            sum +=v1.shape[0]
-        print('The sum of params is {0}'.format(sum))
+    ## Counting the number of parameters
+    # with DRNN.graph.as_default():
+    #     variables_names =[v.name for v in tf.compat.v1.trainable_variables()]
+    #     sum = 0
+    #     values = sess.run(variables_names)
+    #     for k,v in zip(variables_names, values):
+    #         v1 = tf.reshape(v,[-1])
+    #         print(k,v1.shape)
+    #         sum +=v1.shape[0]
+    #     print('The sum of params is {0}'.format(sum))
 
     #To store data
     meanEnergy=[]

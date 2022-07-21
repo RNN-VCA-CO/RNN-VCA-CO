@@ -450,28 +450,26 @@ class vca:
         random.seed(seed)  # `python` built-in pseudo-random generator
         np.random.seed(seed)  # numpy pseudo-random generator
         tf.compat.v1.set_random_seed(seed)  # tensorflow pseudo-random generator
-
-        self.N = N
-        self.num_units = 40     # size of RNN hidden units
-        self.numlayers = n_layers
-        self.numsamples = 50    # number of samples to generate per training step during backprop
-
-        #Defining the other parameters
-        self.units = [self.num_units]*self.numlayers # defines the number of hidden units at each layer (for Dilated)
-        self.lr = np.float64(1e-4)
-        self.activation_function = tf.nn.elu
-        self.rnn_cell = vca.rnn_cells[rnn_unit]
-
+        # VCA hyperparameters
         self.num_warmup = n_warmup
         self.num_anneal = n_anneal
         self.num_train = n_train
-
         self.T0 = T0
-        self.qubo = qubo
+        # RNN architecture hyperparameters
+        self.N = N
+        self.numlayers = n_layers
+        self.num_units = 40     # size of RNN hidden units
+        self.units = [self.num_units]*self.numlayers # defines the number of hidden units at each layer (for Dilated)
+        self.numsamples = 50    # number of training samples
+        self.lr = np.float64(1e-4)  # learning rate for backpropagation
+        self.activation_function = tf.nn.elu    # activation function
+        self.rnn_cell = vca.rnn_cells[rnn_unit]     # type of RNN cell among {"basic", "lstm", "gru"}
+
+        self.qubo = qubo    # QUBO matrix to calculate the Hamiltonian/energy
 
         print('\n')
-        print("Number of spins = {}".format(self.N))
-        print('Number of samples = {}'.format(self.numsamples))
+        print("Number of nodes/binary variables = {}".format(self.N))
+        print('Number of training samples = {}'.format(self.numsamples))
         print("Initial temperature {}".format(self.T0))
 
         print('\nWamup steps = {}'.format(self.num_warmup))
@@ -635,7 +633,7 @@ class vca:
                         time_count += 1
 
                 # when training is done, generate 500000 samples, 50000 at a time
-                samples_per_step = 50000
+                samples_per_step = 1000
                 n_steps = 10
                 samplesandprobs_final = self.PRNN.sample(numsamples=samples_per_step, inputdim=2)
 
@@ -648,6 +646,6 @@ class vca:
                     samples_final[(i)*samples_per_step : (i+1)*samples_per_step] = samples_step
                     energies_final[(i)*samples_per_step : (i+1)*samples_per_step] = energies_step
                 
-                print("500,000 samples generated after training")
+                print("10,000 samples generated after training")
                     
         return energies_final, samples_final

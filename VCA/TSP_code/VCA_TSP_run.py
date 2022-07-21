@@ -37,11 +37,11 @@ if __name__ == '__main__':
     # n_warmup - number of training steps at the initial temperature T=T0
     # n_anneal - duration of the annealing procedure
     # n_train - number of training step during backprop after every annealing step
-    n_warmup = 5
-    n_anneal = 5
-    n_train = 2
+    n_warmup = 2000
+    n_anneal = 16
+    n_train = 5
     # VCA-Dilated
     model = vca(N=N, coordinates=coordinates, n_warmup=n_warmup, n_anneal=n_anneal, n_train=n_train, T0=2.0)
     energies, samples = model.run()
-    np.save("test", energies)
+ 
 
