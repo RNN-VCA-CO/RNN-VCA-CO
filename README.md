@@ -13,8 +13,7 @@ This code was build on top of the code in this repository: https://github.com/Ve
 
 ## `Note`
 
-- 'VCA_Max-Cut.ipynb' and 'VCA_NSP.ipynb' files use tensorflow v2 with latest numpy version.
-- The .py files in directory 'TSP_code' use tensorflow v1 with an older numpy version (v1.16) for compatibility.
+- The .py files in the VCA directory are use tensorflow v2 along with latest numpy version.
 
 ## `License`
 This code can be freely used for academic purposes that are socially and scientifically beneficial. However, it is under the ['Attribution-NonCommercial-ShareAlike 4.0 International'](https://creativecommons.org/licenses/by-nc-sa/4.0/) license. 
